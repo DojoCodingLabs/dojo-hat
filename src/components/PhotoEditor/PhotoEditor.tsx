@@ -1,11 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import rightImage from '../../assets/right.png';
-import leftImage from '../../assets/left.png';
+import rightImage from '../../assets/right-dojo-hat.png';
+import leftImage from '../../assets/left-dojo-hat.png';
+import christmasHatImage from '../../assets/dojo-christmas-hat.png';
+import dojoLogo from '../../assets/Logo-Dojo.png';
 import { Position, Transform } from './types';
 
 export const PhotoEditor: React.FC = () => {
     const [baseImage, setBaseImage] = useState<string>('');
     const [currentHatImage, setCurrentHatImage] = useState<string>(rightImage);
+    const [isChristmasMode, setIsChristmasMode] = useState<boolean>(false);
     const [transform, setTransform] = useState<Transform>({
         position: { x: 0, y: 0 },
         rotation: 0,
@@ -135,8 +138,19 @@ export const PhotoEditor: React.FC = () => {
     }, []);
 
     const handleFlip = useCallback(() => {
+        if (isChristmasMode) return; // Don't flip Christmas hat
         setCurrentHatImage(prev => prev === rightImage ? leftImage : rightImage);
-    }, []);
+    }, [isChristmasMode]);
+
+    const handleChristmasToggle = useCallback(() => {
+        const newChristmasMode = !isChristmasMode;
+        setIsChristmasMode(newChristmasMode);
+        if (newChristmasMode) {
+            setCurrentHatImage(christmasHatImage);
+        } else {
+            setCurrentHatImage(rightImage);
+        }
+    }, [isChristmasMode]);
 
     const handleReset = useCallback(() => {
         setTransform({
@@ -219,7 +233,7 @@ export const PhotoEditor: React.FC = () => {
             console.error('Save error:', error);
             showStatus('Error saving image', 'error');
         }
-    }, [baseImage, transform, originalImageSize]);
+    }, [baseImage, transform, originalImageSize, currentHatImage]);
 
     const getOverlayStyle = () => {
         return {
@@ -231,15 +245,94 @@ export const PhotoEditor: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 p-4 w-full min-h-screen font-['Space_Grotesk'] bg-[#1a1a1a] text-[#f0f0f0] overflow-x-hidden">
-            <div className="flex flex-col items-center w-full max-w-7xl mx-auto">
-                <div className="text-center mb-8">
-                    <h1 className="text-[#ff6b2b] text-4xl uppercase tracking-wider font-bold m-0">
-                        Put on your AI16Z hat
+        <div className={`flex flex-col items-center gap-4 p-4 w-full min-h-screen font-['Space_Grotesk'] overflow-x-hidden relative ${
+            isChristmasMode 
+                ? 'bg-gradient-to-b from-red-50 via-white to-green-50' 
+                : 'bg-white'
+        }`}>
+            {/* Christmas background decorations */}
+            {isChristmasMode && (
+                <>
+                    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                        {/* Snowflakes */}
+                        {[...Array(30)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute text-2xl text-blue-300 opacity-60 animate-pulse"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    top: `${Math.random() * 100}%`,
+                                    animationDelay: `${Math.random() * 3}s`,
+                                    animationDuration: `${3 + Math.random() * 2}s`,
+                                }}
+                            >
+                                ❄️
+                            </div>
+                        ))}
+                        {/* Christmas ornaments */}
+                        {[...Array(15)].map((_, i) => (
+                            <div
+                                key={`ornament-${i}`}
+                                className="absolute text-xl opacity-40"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    top: `${Math.random() * 100}%`,
+                                    animation: `float ${4 + Math.random() * 2}s ease-in-out infinite`,
+                                    animationDelay: `${Math.random() * 2}s`,
+                                }}
+                            >
+                                {i % 3 === 0 ? '🎄' : i % 3 === 1 ? '🎁' : '⭐'}
+                            </div>
+                        ))}
+                    </div>
+                    <style>{`
+                        @keyframes float {
+                            0%, 100% { transform: translateY(0px) rotate(0deg); }
+                            50% { transform: translateY(-20px) rotate(10deg); }
+                        }
+                    `}</style>
+                </>
+            )}
+            
+            <div className="flex flex-col items-center w-full max-w-7xl mx-auto relative z-10">
+                <div className="text-center mb-8 flex flex-col items-center gap-4">
+                    <img
+                        src={dojoLogo}
+                        alt="Dojo Coding logo"
+                        className="w-36 h-auto drop-shadow-[0_25px_45px_rgba(255,140,75,0.45)]"
+                    />
+                    <h1 className={`text-5xl uppercase tracking-wider font-black m-0 ${
+                        isChristmasMode
+                            ? 'text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-green-600 to-red-600 drop-shadow-[0_6px_20px_rgba(0,0,0,0.2)]'
+                            : 'text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b2b] via-[#ff8853] to-[#ff6b2b] drop-shadow-[0_6px_20px_rgba(0,0,0,0.15)]'
+                    }`}>
+                        Put on your Dojo Coding hat
                     </h1>
-                    <p className="text-[#ff8f5a] text-lg mt-2">
+                    <p className={`text-xl font-semibold tracking-[0.3em] mt-2 ${
+                        isChristmasMode
+                            ? 'text-red-700 drop-shadow-[0_4px_12px_rgba(0,0,0,0.2)]'
+                            : 'text-[#ff6b2b] drop-shadow-[0_4px_12px_rgba(0,0,0,0.1)]'
+                    }`}>
                         BE A PARTNER
                     </p>
+                </div>
+
+                <div className="flex items-center gap-3 mb-4">
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={isChristmasMode}
+                            onChange={handleChristmasToggle}
+                            className="w-5 h-5 rounded border-2 border-[#ff6b2b] text-red-600 focus:ring-2 focus:ring-[#ff6b2b] focus:ring-offset-2 cursor-pointer transition-all"
+                        />
+                        <span className={`text-lg font-semibold flex items-center gap-2 ${
+                            isChristmasMode
+                                ? 'text-red-700'
+                                : 'text-gray-700'
+                        }`}>
+                            🎄 Christmas Mode
+                        </span>
+                    </label>
                 </div>
 
                 <div className="w-full max-w-md">
@@ -247,13 +340,17 @@ export const PhotoEditor: React.FC = () => {
                         type="file"
                         accept="image/*"
                         onChange={handleBaseImageUpload}
-                        className="w-full p-3 border-2 border-[#ff6b2b] rounded-lg bg-[#2a2a2a] text-white cursor-pointer transition-all hover:border-[#ff8f5a] hover:bg-[#3a3a3a]"
+                        className="w-full p-3 border-2 border-[#ff6b2b] rounded-lg bg-white text-gray-800 cursor-pointer transition-all hover:border-[#ff8f5a] hover:bg-gray-50 shadow-md"
                     />
                 </div>
 
                 <div
                     ref={containerRef}
-                    className="relative w-full max-w-[800px] h-[600px] mx-auto mt-8 border-3 border-[#ff6b2b] rounded-xl overflow-hidden touch-none bg-[#2a2a2a] shadow-lg"
+                    className={`relative w-full max-w-[800px] h-[600px] mx-auto mt-8 border-3 rounded-xl overflow-hidden touch-none shadow-lg ${
+                        isChristmasMode
+                            ? 'border-red-500 bg-gradient-to-br from-red-50 to-green-50'
+                            : 'border-[#ff6b2b] bg-gray-100'
+                    }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
@@ -261,8 +358,12 @@ export const PhotoEditor: React.FC = () => {
                     onTouchEnd={handleTouchEnd}
                     onTouchCancel={handleTouchEnd}
                 >
-                    <div className="absolute top-4 right-4 px-4 py-2 bg-[#ff6b2b]/90 rounded-full text-white text-sm font-semibold flex items-center gap-2 z-10">
-                        🤖 AI16Z
+                    <div className={`absolute top-4 right-4 px-4 py-2 rounded-full text-white text-sm font-semibold flex items-center gap-2 z-10 shadow-lg ${
+                        isChristmasMode
+                            ? 'bg-gradient-to-r from-red-600 to-green-600'
+                            : 'bg-[#ff6b2b]'
+                    }`}>
+                        {isChristmasMode ? '🎄' : '🤖'} Dojo Coding
                     </div>
 
                     {baseImage && (
@@ -287,25 +388,43 @@ export const PhotoEditor: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-4 justify-center p-6 bg-[#2a2a2a] rounded-xl shadow-lg mt-4 w-full max-w-[800px]">
-                    {['⟲ Rotate Left', '⟳ Rotate Right', '+ Scale Up', '- Scale Down', '↔️ Flip', 'Reset', 'Save Image'].map((text) => (
-                        <button
-                            key={text}
-                            onClick={() => {
-                                if (text === '⟲ Rotate Left') handleRotate('left');
-                                else if (text === '⟳ Rotate Right') handleRotate('right');
-                                else if (text === '+ Scale Up') handleScale('up');
-                                else if (text === '- Scale Down') handleScale('down');
-                                else if (text === '↔️ Flip') handleFlip();
-                                else if (text === 'Reset') handleReset();
-                                else if (text === 'Save Image') handleSave();
-                            }}
-                            disabled={text === 'Save Image' && !baseImage}
-                            className={`px-6 py-3 rounded-lg bg-[#ff6b2b] text-white cursor-pointer text-base font-semibold uppercase tracking-wider transition-all hover:bg-[#ff8f5a] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:bg-gray-600 disabled:cursor-not-allowed disabled:transform-none`}
-                        >
-                            {text}
-                        </button>
-                    ))}
+                <div className={`flex flex-wrap gap-4 justify-center p-6 rounded-xl shadow-lg mt-4 w-full max-w-[800px] ${
+                    isChristmasMode ? 'bg-gradient-to-r from-red-100 to-green-100' : 'bg-gray-100'
+                }`}>
+                    {['⟲ Rotate Left', '⟳ Rotate Right', '+ Scale Up', '- Scale Down', '↔️ Flip', 'Reset', 'Save Image'].map((text) => {
+                        const isReset = text === 'Reset';
+                        const isDisabled = text === 'Save Image' && !baseImage;
+                        const isFlip = text === '↔️ Flip';
+                        
+                        return (
+                            <button
+                                key={text}
+                                onClick={() => {
+                                    if (text === '⟲ Rotate Left') handleRotate('left');
+                                    else if (text === '⟳ Rotate Right') handleRotate('right');
+                                    else if (text === '+ Scale Up') handleScale('up');
+                                    else if (text === '- Scale Down') handleScale('down');
+                                    else if (isFlip) handleFlip();
+                                    else if (isReset) handleReset();
+                                    else if (text === 'Save Image') handleSave();
+                                }}
+                                disabled={isDisabled || (isFlip && isChristmasMode)}
+                                className={`px-6 py-3 rounded-lg cursor-pointer text-base font-semibold uppercase tracking-[0.2em] transition-all hover:-translate-y-0.5 active:translate-y-0 ${
+                                    isReset
+                                        ? `bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 hover:shadow-[0_10px_25px_rgba(124,58,237,0.5)] ring-2 ring-purple-300 ring-offset-2`
+                                        : isDisabled
+                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed transform-none opacity-60'
+                                        : isFlip && isChristmasMode
+                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed transform-none opacity-60'
+                                        : isChristmasMode
+                                        ? 'bg-gradient-to-r from-red-500 to-green-500 text-white hover:from-red-600 hover:to-green-600 hover:shadow-[0_10px_25px_rgba(220,38,38,0.4)]'
+                                        : 'bg-gradient-to-r from-[#ff783c] to-[#ff4f26] text-white hover:from-[#ff9a64] hover:to-[#ff6130] hover:shadow-[0_10px_25px_rgba(255,111,59,0.45)]'
+                                }`}
+                            >
+                                {text}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {status && (
@@ -322,12 +441,16 @@ export const PhotoEditor: React.FC = () => {
 
                 <div className="fixed bottom-4 right-4">
                     <a
-                        href="https://x.com/ai16zdao"
+                        href="https://x.com/dojocoding"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-[#ff6b2b] hover:text-[#ff8f5a] transition-colors"
+                        className={`inline-flex items-center gap-2 text-sm transition-colors ${
+                            isChristmasMode
+                                ? 'text-red-700 hover:text-red-800'
+                                : 'text-[#ff6b2b] hover:text-[#ff8f5a]'
+                        }`}
                     >
-                        <span>© 2024 AI16Z™</span>
+                        <span>© 2024 Dojo Coding™</span>
                         <svg
                             className="w-4 h-4 fill-current"
                             xmlns="http://www.w3.org/2000/svg"

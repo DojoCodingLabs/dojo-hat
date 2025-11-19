@@ -1,46 +1,99 @@
-# Getting Started with Create React App
+# Dojo Coding Hat Photo Editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fun and interactive photo editor that lets you add Dojo Coding hats to your photos! Upload your image, position and customize the hat overlay, and download your creation.
+
+## Features
+
+- 🎩 **Hat Overlay**: Add Dojo Coding hats to any photo
+- 🎄 **Christmas Mode**: Toggle festive Christmas hat with animated background decorations
+- 🎨 **Interactive Controls**:
+  - Rotate hat left/right
+  - Scale up/down
+  - Flip horizontally
+  - Drag to reposition
+  - Reset to default position
+- 💾 **Save & Download**: Export your edited image as PNG
+- 📱 **Responsive Design**: Works on desktop and mobile devices
+- ✨ **Modern UI**: Clean white background with Dojo Coding branding
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Yarn package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd dojo-hat
+```
+
+2. Install dependencies:
+```bash
+yarn install
+```
+
+3. Start the development server:
+```bash
+yarn start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000)
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000). The page will reload automatically when you make changes.
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production to the `build` folder. The build is optimized and ready for deployment.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `yarn test`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Launches the test runner in interactive watch mode.
 
-### `yarn eject`
+### `yarn deploy`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Builds and deploys the app to GitHub Pages (configured in `package.json`).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. **Upload an Image**: Click the file input to select an image from your device
+2. **Position the Hat**: Click and drag the hat overlay to position it on your photo
+3. **Customize**:
+   - Use rotation buttons to rotate the hat
+   - Use scale buttons to make it bigger or smaller
+   - Use flip button to mirror the hat (disabled in Christmas mode)
+   - Use reset button to return to default position
+4. **Christmas Mode**: Toggle the checkbox at the top to switch to festive Christmas hat with animated decorations
+5. **Save**: Click "Save Image" to download your edited photo
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Technology Stack
 
-## Learn More
+- **React** 18.3.1
+- **TypeScript** 4.4.2
+- **Tailwind CSS** - Styling
+- **Create React App** - Build tooling
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Deployment
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The app is configured to deploy to GitHub Pages. Run:
+
+```bash
+yarn deploy
+```
+
+This will build the app and deploy it to the `gh-pages` branch.
+
+## License
+
+© 2024 Dojo Coding™
+
+## Links
+
+- [Dojo Coding on X (Twitter)](https://x.com/dojocoding)
